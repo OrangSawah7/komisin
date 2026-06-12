@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArtistProfileController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,10 @@ Route::middleware(['auth', 'role:artist'])->prefix('artist')->name('artist.')->g
     Route::get('/dashboard', function () {
         return view('artist.dashboard');
     })->name('dashboard');
+
+    Route::get('/profile', [ArtistProfileController::class, 'show'])->name('profile');
+    Route::get('/profile/edit', [ArtistProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile/update', [ArtistProfileController::class, 'update'])->name('profile.update');
 });
 
 // Rute buat customer supaya bisa mantau apa aja yg dibeli, janlup komis ya biar artist kaya

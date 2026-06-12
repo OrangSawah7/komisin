@@ -6,6 +6,9 @@
     <a href="/artist/dashboard" class="nav-link active">
         <i class="fas fa-home"></i> Dashboard
     </a>
+    <a href="/artist/profile" class="nav-link">
+        <i class="fas fa-user"></i> Profil Saya
+    </a>
     <a href="#" class="nav-link">
         <i class="fas fa-paint-brush"></i> Komisi Saya
     </a>
