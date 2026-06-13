@@ -6,7 +6,7 @@
     <a href="/admin/dashboard" class="nav-link active">
         <i class="fas fa-home"></i> Dashboard
     </a>
-    <a href="#" class="nav-link">
+    <a href="/admin/commissions" class="nav-link">
         <i class="fas fa-users"></i> Kelola User
     </a>
     <a href="#" class="nav-link">

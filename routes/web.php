@@ -20,6 +20,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('dashboard');
+
+    // biar otomatis bikin 7 route sekaligus buat crud
+    Route::resource('commissions', \App\Http\Controllers\Admin\CommissionController::class);
 });
 
 // Rute buat customer
