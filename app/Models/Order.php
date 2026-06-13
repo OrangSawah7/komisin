@@ -10,6 +10,7 @@ class Order extends Model
         'commission_id',
         'customer_id',
         'note',
+        'reference_image',
         'status',
         'total',
     ];

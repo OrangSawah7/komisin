@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('commission_id')->constrained()->onDelete('cascade');
             $table->foreignId('customer_id')->constrained('users')->onDelete('cascade');
             $table->text('note')->nullable();
+            $table->string('reference_image')->nullable();
             $table->enum('status', [
                 'pending',
                 'waiting_payment',

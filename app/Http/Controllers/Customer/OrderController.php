@@ -28,14 +28,22 @@ class OrderController extends Controller
     {
         $request->validate([
             'note' => 'nullable|string',
+            'reference_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $commission = Commission::findOrFail($commissionId);
+
+        // upload foto referensi kalau ada
+        $referencePath = null;
+        if ($request->hasFile('reference_image')) {
+            $referencePath = $request->file('reference_image')->store('references', 'public');
+        }
 
         $order = Order::create([
             'commission_id' => $commission->id,
             'customer_id' => auth()->user()->id,
             'note' => $request->note,
+            'reference_image' => $referencePath,
             'status' => 'pending',
             'total' => $commission->price,
         ]);

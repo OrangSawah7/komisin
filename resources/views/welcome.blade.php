@@ -122,10 +122,16 @@
                     @foreach($commissions as $commission)
                         <div class="col-md-4">
                             <div class="p-4 rounded-4 h-100" style="background-color: #1a1a1a; border: 1px solid #333;">
-                                <div class="mb-3 rounded-3 d-flex align-items-center justify-content-center"
-                                     style="height: 150px; background-color: #CB2957; font-size: 3rem;">
-                                    🎨
-                                </div>
+                                @if($commission->thumbnail)
+                                    <img src="{{ Storage::url($commission->thumbnail) }}"
+                                         class="rounded-3 w-100 mb-3"
+                                         style="height: 150px; object-fit: cover;">
+                                @else
+                                    <div class="mb-3 rounded-3 d-flex align-items-center justify-content-center"
+                                         style="height: 150px; background-color: #CB2957; font-size: 3rem;">
+                                        🎨
+                                    </div>
+                                @endif
                                 <span class="badge rounded-pill mb-2" style="background-color: #333; color: #fff;">
                             {{ $commission->category }}
                         </span>

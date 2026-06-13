@@ -49,6 +49,17 @@
                 <td>{{ $order->note ?? '-' }}</td>
             </tr>
             <tr>
+                <td style="opacity:0.5;">Referensi</td>
+                <td>
+                    @if($order->reference_image)
+                        <img src="{{ Storage::url($order->reference_image) }}"
+                             style="width:150px; height:100px; object-fit:cover; border-radius:8px;">
+                    @else
+                        -
+                    @endif
+                </td>
+            </tr>
+            <tr>
                 <td style="opacity:0.5;">Tanggal</td>
                 <td>{{ $order->created_at->format('d M Y, H:i') }}</td>
             </tr>

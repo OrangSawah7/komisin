@@ -22,25 +22,30 @@ class CommissionController extends Controller
 
     public function store(Request $request)
     {
-        // mastiin data yg masuk dah bener apa belom
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
             'category' => 'required|string|max:255',
+            'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        // nyimpen ke debe
+        // upload foto kalau ada
+        $thumbnailPath = null;
+        if ($request->hasFile('thumbnail')) {
+            $thumbnailPath = $request->file('thumbnail')->store('commissions', 'public');
+        }
+
         Commission::create([
             'title' => $request->title,
             'description' => $request->description,
             'price' => $request->price,
             'category' => $request->category,
+            'thumbnail' => $thumbnailPath,
             'status' => 'approved',
         ]);
 
-        // habis disimpen, balik lagi ke halaman komisi
-        return redirect()->route('admin.commissions.index')->with('success', 'komisi berhasil ditambahkan!');
+        return redirect()->route('admin.commissions.index')->with('success', 'Komisi berhasil ditambahkan!');
     }
 
     // larapel otomatis nyari data komisi based on ID yg ada di URL, ini namanya ROute Model Binding
@@ -55,14 +60,25 @@ class CommissionController extends Controller
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
             'category' => 'required|string|max:255',
+            'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        // apdet komisi yg dah ada di debe
+        // upload foto baru kalau ada
+        $thumbnailPath = $commission->thumbnail;
+        if ($request->hasFile('thumbnail')) {
+            // hapus foto lama kalau ada
+            if ($commission->thumbnail) {
+                \Storage::disk('public')->delete($commission->thumbnail);
+            }
+            $thumbnailPath = $request->file('thumbnail')->store('commissions', 'public');
+        }
+
         $commission->update([
             'title' => $request->title,
             'description' => $request->description,
             'price' => $request->price,
             'category' => $request->category,
+            'thumbnail' => $thumbnailPath,
         ]);
 
         return redirect()->route('admin.commissions.index')->with('success', 'Komisi berhasil diupdate!');

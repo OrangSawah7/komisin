@@ -29,7 +29,7 @@
 
     {{-- Form Order --}}
     <div class="p-4 rounded-4" style="background-color: #1a1a1a; border: 1px solid #333;">
-        <form method="POST" action="/customer/orders/{{ $commission->id }}">
+        <form method="POST" action="/customer/orders/{{ $commission->id }}" enctype="multipart/form-data">
             @csrf
 
             <div class="mb-4">
@@ -37,6 +37,17 @@
                 <textarea name="note" rows="5" class="form-control rounded-3"
                           style="background-color: #111; border: 1px solid #333; color: #fff;"
                           placeholder="Ceritakan detail yang kamu inginkan...">{{ old('note') }}</textarea>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label" style="opacity:0.7;">Foto Referensi <span style="opacity:0.5;">(opsional)</span></label>
+                <input type="file" name="reference_image" class="form-control rounded-3"
+                       style="background-color: #111; border: 1px solid #333; color: #fff;"
+                       accept="image/jpg,image/jpeg,image/png">
+                <small style="opacity:0.4;">Upload gambar referensi untuk memperjelas pesananmu. Format: JPG, JPEG, PNG. Maks 2MB.</small>
+                @error('reference_image')
+                <small style="color:#CB2957;">{{ $message }}</small>
+                @enderror
             </div>
 
             <div class="d-flex gap-3">

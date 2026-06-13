@@ -56,6 +56,9 @@
                         </td>
                         <td>{{ $order->created_at->format('d M Y') }}</td>
                         <td>
+                            <a href="/admin/orders/{{ $order->id }}" class="btn btn-sm btn-outline-dark rounded-pill px-3 mb-2 d-block">
+                                👁 Detail
+                            </a>
                             @if($order->status == 'pending')
                                 <form method="POST" action="/admin/orders/{{ $order->id }}/status" style="display:flex; gap:8px;">
                                     @csrf
