@@ -18,22 +18,6 @@ class UserSeeder extends Seeder
             'role' => 'admin',
         ]);
 
-        // Artists handal satu
-        User::create([
-            'name' => 'Artist Satu',
-            'email' => 'artist1@komisin.com',
-            'password' => bcrypt('password'),
-            'role' => 'artist',
-        ]);
-
-        // artist handal dua
-        User::create([
-            'name' => 'Artist Dua',
-            'email' => 'artist2@komisin.com',
-            'password' => bcrypt('password'),
-            'role' => 'artist',
-        ]);
-
         // yang beli
         User::create([
             'name' => 'Customer Satu',

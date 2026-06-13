@@ -20,4 +20,9 @@ class ArtistProfile extends Model
     public function user() {
         return $this->belongsTo(User::class);
     }
+
+    // ini buat relasi sebaliknya, pake hasMany soalnya 1 artist bisa posting beberapa katalog komisi
+    public function commissions(){
+        return $this->hasMany(Commission::class);
+    }
 }
