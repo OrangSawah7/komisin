@@ -23,6 +23,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // biar otomatis bikin 7 route sekaligus buat crud
     Route::resource('commissions', \App\Http\Controllers\Admin\CommissionController::class);
+
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->only(['index', 'destroy']);
 });
 
 // Rute buat customer

@@ -9,7 +9,7 @@
     <a href="/admin/commissions" class="nav-link">
         <i class="fas fa-users"></i> Kelola User
     </a>
-    <a href="#" class="nav-link">
+    <a href="/admin/users" class="nav-link">
         <i class="fas fa-paint-brush"></i> Kelola Komisi
     </a>
 @endsection
