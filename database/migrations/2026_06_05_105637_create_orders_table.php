@@ -16,7 +16,14 @@ return new class extends Migration
             $table->foreignId('commission_id')->constrained()->onDelete('cascade');
             $table->foreignId('customer_id')->constrained('users')->onDelete('cascade');
             $table->text('note')->nullable();
-            $table->enum('status', ['pending_payment', 'pending', 'accepted', 'in_progress', 'completed', 'cancelled'])->default('pending_payment');
+            $table->enum('status', [
+                'pending',
+                'waiting_payment',
+                'in_progress',
+                'completed',
+                'rejected',
+                'cancelled'
+            ])->default('pending');
             $table->decimal('total', 10, 2);
             $table->timestamps();
         });

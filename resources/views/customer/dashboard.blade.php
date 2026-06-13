@@ -6,10 +6,10 @@
     <a href="/customer/dashboard" class="nav-link active">
         <i class="fas fa-home"></i> Dashboard
     </a>
-    <a href="#" class="nav-link">
+    <a href="/" class="nav-link">
         <i class="fas fa-search"></i> Browse Komisi
     </a>
-    <a href="#" class="nav-link">
+    <a href="/customer/orders" class="nav-link">
         <i class="fas fa-box"></i> Order Saya
     </a>
 @endsection

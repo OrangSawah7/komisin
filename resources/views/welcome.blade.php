@@ -16,12 +16,36 @@
                     <li class="nav-item">
                         <a class="nav-link text-white" href="#">Browse Komisi</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-light rounded-pill px-4" href="/login">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn rounded-pill px-4 text-white fw-bold" href="/register" style="background-color: #CB2957;">Register</a>
-                    </li>
+                    @auth
+                        <li class="nav-item dropdown">
+                            <a class="btn btn-outline-light rounded-pill px-4 dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                👤 {{ auth()->user()->name }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" style="background-color: #1a1a1a; border: 1px solid #CB2957;">
+                                <li>
+                                    <a class="dropdown-item text-white" href="/{{ auth()->user()->role }}/dashboard">
+                                        <i class="fas fa-home me-2" style="color: #CB2957;"></i> Dashboard
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider" style="border-color: #333;"></li>
+                                <li>
+                                    <form method="POST" action="/logout">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item text-white">
+                                            <i class="fas fa-sign-out-alt me-2" style="color: #CB2957;"></i> Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    @else
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light rounded-pill px-4" href="/login">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn rounded-pill px-4 text-white fw-bold" href="/register" style="background-color: #CB2957;">Register</a>
+                        </li>
+                    @endauth
                 </ul>
             </div>
         </div>
@@ -78,6 +102,63 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    {{-- BROWSE KOMISI --}}
+    <section id="komisi" style="background-color: #0a0a0a; padding: 80px 0;">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold text-white" style="font-family: 'Poppins', sans-serif;">Browse Komisi</h2>
+                <p style="opacity: 0.5; color: #fff;">Temukan karya yang sesuai kebutuhanmu</p>
+            </div>
+
+            @if($commissions->isEmpty())
+                <div class="text-center" style="color: rgba(255,255,255,0.4);">
+                    <p>Belum ada komisi tersedia.</p>
+                </div>
+            @else
+                <div class="row g-4">
+                    @foreach($commissions as $commission)
+                        <div class="col-md-4">
+                            <div class="p-4 rounded-4 h-100" style="background-color: #1a1a1a; border: 1px solid #333;">
+                                <div class="mb-3 rounded-3 d-flex align-items-center justify-content-center"
+                                     style="height: 150px; background-color: #CB2957; font-size: 3rem;">
+                                    🎨
+                                </div>
+                                <span class="badge rounded-pill mb-2" style="background-color: #333; color: #fff;">
+                            {{ $commission->category }}
+                        </span>
+                                <h6 class="fw-bold text-white mt-2">{{ $commission->title }}</h6>
+                                <p style="opacity: 0.5; color: #fff; font-size: 0.85rem;">
+                                    {{ Str::limit($commission->description, 80) }}
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="fw-bold" style="color: #CB2957;">
+                                Rp {{ number_format($commission->price, 0, ',', '.') }}
+                            </span>
+                                    @auth <!-- ini kalo udah login -->
+                                        <!-- kalau udah login/role nya cust, bakal nampilin tombol order -->
+                                        @if(auth()->user()->role === 'customer')
+                                            <a href="/customer/orders/{{ $commission->id }}/create"
+                                               class="btn btn-sm rounded-pill px-3 text-white"
+                                               style="background-color: #CB2957;">
+                                                Order Sekarang
+                                            </a>
+                                        @endif
+                                    @else <!-- kalau belum login, tombol diarahkan ke login dulu -->
+                                        <a href="/login"
+                                           class="btn btn-sm rounded-pill px-3 text-white"
+                                           style="background-color: #CB2957;">
+                                            Order Sekarang
+                                        </a>
+                                    @endauth
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
         </div>
     </section>
 

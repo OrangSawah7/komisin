@@ -7,10 +7,13 @@
         <i class="fas fa-home"></i> Dashboard
     </a>
     <a href="/admin/commissions" class="nav-link">
-        <i class="fas fa-users"></i> Kelola User
+        <i class="fas fa-paint-brush"></i> Kelola Komisi
+    </a>
+    <a href="/admin/orders" class="nav-link">
+        <i class="fas fa-box"></i> Kelola Order
     </a>
     <a href="/admin/users" class="nav-link">
-        <i class="fas fa-paint-brush"></i> Kelola Komisi
+        <i class="fas fa-users"></i> Kelola User
     </a>
 @endsection
 

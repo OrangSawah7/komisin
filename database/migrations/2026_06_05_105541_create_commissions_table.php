@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('commissions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('artist_profile_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('artist_profile_id')->nullable();
             $table->string('title');
             $table->text('description');
             $table->decimal('price', 10, 2);

@@ -1,11 +1,10 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index']);
 
 // Redirect dashboard berdasarkan role
 Route::get('/dashboard', function () {
@@ -25,6 +24,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('commissions', \App\Http\Controllers\Admin\CommissionController::class);
 
     Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->only(['index', 'destroy']);
+    Route::get('/orders', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
+    Route::patch('/orders/{order}/status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+
 });
 
 // Rute buat customer
@@ -32,6 +34,13 @@ Route::middleware(['auth', 'role:customer'])->prefix('customer')->name('customer
     Route::get('/dashboard', function () {
         return view('customer.dashboard');
     })->name('dashboard');
+
+    Route::post('/orders/{commissionId}', [\App\Http\Controllers\Customer\OrderController::class, 'store'])->name('orders.store');
+    Route::get('/orders/{id}', [\App\Http\Controllers\Customer\OrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders/{commissionId}/create', [\App\Http\Controllers\Customer\OrderController::class, 'create'])->name('orders.create');
+    Route::get('/orders', [\App\Http\Controllers\Customer\OrderController::class, 'index'])->name('orders.index');
+
+    Route::patch('/orders/{id}/cancel', [\App\Http\Controllers\Customer\OrderController::class, 'cancel'])->name('orders.cancel');
 });
 
 Route::middleware('auth')->group(function () {
