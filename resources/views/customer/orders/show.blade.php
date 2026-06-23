@@ -135,7 +135,7 @@
                     <p style="font-size: 0.85rem; color: var(--blue-light); margin-bottom: 18px; line-height: 1.6;">
                         Order kamu telah diterima admin. Selesaikan pembayaran agar bisa segera dikerjakan.
                     </p>
-                    <button class="btn-navy w-100" style="justify-content: center; padding: 12px;">
+                    <button onclick="payNow({{ $order->id }})" class="btn-navy w-100" style="justify-content: center; padding: 12px;">
                         <i class="bi bi-credit-card"></i> Bayar Sekarang
                     </button>
                 </div>
@@ -163,4 +163,24 @@
         </div>
     </div>
 
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
+    <script>
+        function payNow(orderId) {
+            fetch(`/customer/payment/${orderId}/token`, { cache: 'no-store' })
+                .then(res => res.json())
+                .then(data => {
+                    snap.pay(data.snap_token, {
+                        onSuccess: function(result) {
+                            window.location.reload();
+                        },
+                        onPending: function(result) {
+                            window.location.reload();
+                        },
+                        onError: function(result) {
+                            alert('Pembayaran gagal!');
+                        }
+                    });
+                });
+        }
+    </script>
 @endsection

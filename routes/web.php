@@ -61,6 +61,11 @@ Route::middleware(['auth', 'role:customer'])->prefix('customer')->name('customer
     Route::patch('/orders/{id}/cancel', [\App\Http\Controllers\Customer\OrderController::class, 'cancel'])->name('orders.cancel');
     Route::get('/profile', [\App\Http\Controllers\Customer\ProfileController::class, 'show'])->name('profile');
     Route::post('/profile', [\App\Http\Controllers\Customer\ProfileController::class, 'update'])->name('profile.update');
+
+    // rute buwat ambil snap token
+    Route::get('/payment/{orderId}/token', [\App\Http\Controllers\PaymentController::class, 'getSnapToken'])->name('payment.token');
 });
+
+
 
 require __DIR__.'/auth.php';
