@@ -13,16 +13,18 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->enum('role', ['admin', 'customer'])->default('customer')->after('email');
+            $table->string('avatar')->nullable()->after('role');
+            $table->text('bio')->nullable()->after('avatar');
+            $table->boolean('onboarding_completed')->default(false)->after('bio');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('role');
+            $table->dropColumn('avatar');
+            $table->dropColumn('bio');
         });
     }
 };

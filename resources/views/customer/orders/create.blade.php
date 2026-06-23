@@ -3,14 +3,14 @@
 @section('title', 'Buat Order')
 
 @section('sidebar-menu')
-    <a href="/customer/dashboard" class="nav-link">
-        <i class="fas fa-home"></i> Dashboard
+    <a href="/customer/profile" class="nav-link">
+        <i class="bi bi-person"></i> Profil Saya
     </a>
     <a href="/" class="nav-link">
-        <i class="fas fa-search"></i> Browse Komisi
+        <i class="bi bi-grid-3x3-gap"></i> Browse Komisi
     </a>
-    <a href="/customer/orders" class="nav-link">
-        <i class="fas fa-box"></i> Order Saya
+    <a href="/customer/orders" class="nav-link active">
+        <i class="bi bi-box"></i> Order Saya
     </a>
 @endsection
 
