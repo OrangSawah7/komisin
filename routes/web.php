@@ -66,6 +66,7 @@ Route::middleware(['auth', 'role:customer'])->prefix('customer')->name('customer
     Route::get('/payment/{orderId}/token', [\App\Http\Controllers\PaymentController::class, 'getSnapToken'])->name('payment.token');
 });
 
-
+// buat midtrans lur
+Route::post('/payment/notification', [\App\Http\Controllers\PaymentController::class, 'notificationHandler']);
 
 require __DIR__.'/auth.php';

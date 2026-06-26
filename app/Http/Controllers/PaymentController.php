@@ -39,15 +39,13 @@ class PaymentController extends Controller
 
     public function notificationHandler(Request $request)
     {
-        \Midtrans\Config::$serverKey = config('services.midtrans.server_key');
-        \Midtrans\Config::$isProduction = config('services.midtrans.is_production');
+        $payload = $request->all();
 
-        $notif = new \Midtrans\Notification();
+        \Log::info('Midtrans Notification Received:', $payload);
 
-        $transactionStatus = $notif->transaction_status;
-        $orderId = $notif->order_id;
+        $orderId = $payload['order_id'] ?? null;
+        $transactionStatus = $payload['transaction_status'] ?? null;
 
-        // Ambil ID order asli dari format "ORDER-{id}-{timestamp}-{uniqid}"
         preg_match('/ORDER-(\d+)-/', $orderId, $matches);
         $realOrderId = $matches[1] ?? null;
 
@@ -63,11 +61,11 @@ class PaymentController extends Controller
 
         if ($transactionStatus == 'capture' || $transactionStatus == 'settlement') {
             $order->update(['status' => 'in_progress']);
-        } elseif ($transactionStatus == 'expire') {
-            // biarkan tetap waiting_payment, customer bisa bayar ulang
         } elseif ($transactionStatus == 'cancel' || $transactionStatus == 'deny') {
             $order->update(['status' => 'rejected']);
         }
+
+        \Log::info('Order updated. New status: ' . $order->status);
 
         return response()->json(['message' => 'OK']);
     }
