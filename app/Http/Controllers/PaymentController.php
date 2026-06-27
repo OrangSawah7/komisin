@@ -8,7 +8,6 @@ class PaymentController extends Controller
 {
     public function getSnapToken($orderId)
     {
-        // buat set server key dari dot i en vi
         \Midtrans\Config::$serverKey = config('services.midtrans.server_key');
         \Midtrans\Config::$isProduction = config('services.midtrans.is_production');
         \Midtrans\Config::$isSanitized = true;
@@ -18,21 +17,46 @@ class PaymentController extends Controller
             ->where('customer_id', auth()->user()->id)
             ->firstOrFail();
 
+        // Cek afakahh ada payment yang masih aktif (belum 24 jam & masih pending)
+        $existingPayment = \App\Models\Payment::where('order_id', $order->id)
+            ->where('status', 'pending')
+            ->where('created_at', '>=', now()->subHours(24))
+            ->latest()
+            ->first();
+
+        if ($existingPayment) {
+            // Pakai snap_token yang dah ada, gaperlu request baru ke Midtrans
+            return response()->json(['snap_token' => $existingPayment->snap_token]);
+        }
+
+        // Belum ada / sudah expired, generate order_id dan snap_token baru
+        $midtransOrderId = 'ORDER-' . $order->id . '-' . time();
+
         $params = [
-            // ini buat ingfo order (id uniq + jumlah bayar)
             'transaction_details' => [
-                'order_id' => 'ORDER-' . $order->id . '-' . time(),
+                'order_id' => $midtransOrderId,
                 'gross_amount' => (int) $order->total,
             ],
-            // ingfo cust yg bayar
             'customer_details' => [
                 'first_name' => auth()->user()->name,
                 'email' => auth()->user()->email,
             ],
+            'expiry' => [
+                'unit' => 'hours',
+                'duration' => 24,
+            ],
         ];
 
-        // minta token dari midtrans, nanti dipake buat munculin popup bayar hayu bayar
         $snapToken = \Midtrans\Snap::getSnapToken($params);
+
+        // Simpen ke database
+        \App\Models\Payment::create([
+            'order_id' => $order->id,
+            'midtrans_order_id' => $midtransOrderId,
+            'snap_token' => $snapToken,
+            'amount' => $order->total,
+            'status' => 'pending',
+        ]);
 
         return response()->json(['snap_token' => $snapToken]);
     }
@@ -43,10 +67,10 @@ class PaymentController extends Controller
 
         \Log::info('Midtrans Notification Received:', $payload);
 
-        $orderId = $payload['order_id'] ?? null;
+        $midtransOrderId = $payload['order_id'] ?? null;
         $transactionStatus = $payload['transaction_status'] ?? null;
 
-        preg_match('/ORDER-(\d+)-/', $orderId, $matches);
+        preg_match('/ORDER-(\d+)-/', $midtransOrderId, $matches);
         $realOrderId = $matches[1] ?? null;
 
         if (!$realOrderId) {
@@ -59,12 +83,19 @@ class PaymentController extends Controller
             return response()->json(['message' => 'Order not found'], 404);
         }
 
+        $payment = \App\Models\Payment::where('midtrans_order_id', $midtransOrderId)->first();
+
         if ($transactionStatus == 'capture' || $transactionStatus == 'settlement') {
             $order->update(['status' => 'in_progress']);
+            $payment?->update(['status' => 'paid']);
         } elseif ($transactionStatus == 'cancel' || $transactionStatus == 'deny') {
             $order->update(['status' => 'rejected']);
+            $payment?->update(['status' => 'failed']);
+        } elseif ($transactionStatus == 'expire') {
+            $payment?->update(['status' => 'expired']);
         }
 
+        // ?-> tuh buat null-safe-operator cik, jd klaw $payment nya null, barisnya otomatis ke-skip, gx error
         \Log::info('Order updated. New status: ' . $order->status);
 
         return response()->json(['message' => 'OK']);
