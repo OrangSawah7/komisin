@@ -6,7 +6,7 @@
     <nav class="navbar navbar-expand-lg sticky-top navbar-komisiin">
         <div class="container">
             <a class="navbar-brand fw-bold" href="/" style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--navy);">
-                Komisiin
+                Komisinnn
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <i class="bi bi-list" style="font-size: 1.5rem; color: var(--navy);"></i>
